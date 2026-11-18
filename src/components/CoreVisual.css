@@ -1,0 +1,69 @@
+.core-visual{
+  position:relative;
+  min-width:0;
+  padding:24px 0;
+}
+.core-visual>.eyebrow{
+  padding-bottom:17px;
+  border-bottom:1px solid #8da4ad50;
+}
+.core-composition{position:relative;margin:-10px -15px 0}
+.core-composition svg{display:block;width:100%;height:auto}
+.core-purpose{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center;
+}
+.core-purpose>span{
+  color:#e2cda3;
+  font-size:10px;
+  letter-spacing:.13em;
+}
+.core-purpose strong{
+  font:clamp(22px,2.3vw,34px)/1.3 Georgia,serif;
+  color:#f7f3e9;
+  margin:10px 0;
+}
+.core-purpose small{font-size:12px;color:#cbdbe0}
+.core-disciplines{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.core-disciplines button{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:9px;
+  padding:17px 20px;
+  min-height:90px;
+  text-align:left;
+  color:#f7f6f2;
+  background:#173544;
+  border:1px solid #839ba66b;
+  transition:background .2s,transform .2s,border-color .2s;
+}
+.core-disciplines button>span:first-child{
+  grid-column:1/-1;
+  color:#ddc79d;
+  font-size:11px;
+  letter-spacing:.06em;
+}
+.core-disciplines strong{font-size:18px;font-weight:400}
+.core-disciplines button:hover{
+  background:#2b5060;
+  border-color:#ddc79d;
+  transform:translateY(-3px);
+}
+.core-caption{font-size:13px;color:#c2d3d9;margin-bottom:0}
+@media(max-width:800px){
+  .core-visual{max-width:560px;width:100%;margin:auto;padding:0}
+  .core-purpose strong{font-size:30px}
+}
+@media(max-width:420px){
+  .core-purpose strong{font-size:23px}
+  .core-purpose small{font-size:11px}
+  .core-disciplines button{padding:15px}
+}
+@media(prefers-reduced-motion:reduce){
+  .core-disciplines button{transition:none}
+}

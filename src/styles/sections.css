@@ -1,0 +1,268 @@
+:root {
+  --header-height: 80px;
+  --section-space: clamp(24px, 3.5vh, 44px);
+  --section-height: calc((100svh - var(--header-height)) * .95);
+}
+
+html {
+  scroll-padding-top: calc(var(--header-height) + 12px);
+}
+
+#main > section {
+  min-height: var(--section-height);
+  height: auto;
+  padding-block: var(--section-space);
+}
+
+#main > section:not(.shell):not(.hero) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#main > section > .shell {
+  flex-shrink: 0;
+}
+
+#main .section h2 {
+  font-size: clamp(30px, 2.6vw, 42px);
+  line-height: 1.15;
+}
+
+#main .section .eyebrow {
+  margin-bottom: 12px;
+}
+
+#main .section p,
+#main .section li {
+  line-height: 1.6;
+}
+
+#main > .hero {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.hero-grid {
+  flex: 1;
+  align-items: center;
+  padding-block: 26px;
+}
+
+.hero-grid > div:first-child { padding-top: 0; }
+.hero-base { flex-shrink: 0; }
+
+#main > .introduction {
+  align-items: center;
+  gap: 48px;
+}
+
+#main > #clients,
+#main > #engagement {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.expertise-layout {
+  grid-template-columns: .95fr 1.05fr;
+  gap: 28px;
+  margin-top: 22px;
+}
+
+.division-list { position: static; }
+
+.division-list button {
+  min-height: 64px;
+  padding: 16px;
+  font-size: 19px;
+}
+
+.division-detail { padding: 24px; }
+.division-detail h3 { font-size: 29px; }
+.division-detail > p,
+.division-detail li { font-size: 16px; }
+.division-detail ul { margin-block: 12px; }
+.division-detail li { padding-block: 2px; }
+.division-detail .deliverable { margin-top: 14px; padding: 14px 18px; }
+.division-detail .deliverable p { font-size: 16px; }
+.division-detail > .quiet-link { margin-top: 8px; }
+.division-detail .scope-note { margin: 12px 0 0; }
+
+#clients .section-copy { margin: 14px 0; }
+.audience-grid { margin-top: 8px; gap: 10px; }
+.audience-grid button { min-height: 84px; padding: 16px; }
+.audience-grid strong { font-size: 18px; }
+.audience-grid span { margin-top: 6px; font-size: 13px; }
+.audience-detail { margin-top: 16px; padding: 22px; gap: 28px; }
+.audience-detail h3 { font-size: 24px; }
+.audience-detail p { font-size: 16px; }
+
+.connected-heading {
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 28px;
+}
+
+#main .connected-heading h2 {
+  font-size: clamp(29px, 2.4vw, 36px);
+}
+
+.connected-heading h2 br { display: none; }
+.connected-heading > p { margin: 0; font-size: 16px; max-width: none; }
+
+.situation-selector { margin: 16px 0; gap: 10px; }
+.situation-selector button {
+  min-height: 44px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.mandate-context {
+  grid-template-columns: 1.2fr 1fr;
+  padding: 16px 0;
+  gap: 28px;
+  align-items: center;
+}
+
+.mandate-context h3 { font-size: 25px; }
+.mandate-context p { margin: 10px 0 0; font-size: 16px; }
+.mandate-priority { padding-left: 18px; }
+.mandate-priority > p:last-child { font-size: 20px; line-height: 1.4; }
+
+.connected-roles {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.connected-roles article { padding: 16px; }
+.connected-roles h4 { font-size: 21px; margin: 12px 0 8px; }
+.connected-roles p { font-size: 15px; }
+
+.connected-output {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 24px;
+  align-items: center;
+  margin-top: 14px;
+  padding: 14px 18px;
+}
+
+.connected-output > .eyebrow { grid-column: 1 / -1; margin: 0; }
+.connected-output > p:nth-child(2) { margin: 0; font-size: 16px; }
+.connected-output a { font-size: 14px; }
+.connected .illustration-note { margin-top: 10px; font-size: 12px; }
+
+.principles > .shell {
+  display: grid;
+  grid-template-columns: .9fr 1.3fr;
+  gap: 20px 48px;
+  align-items: center;
+}
+
+.principles > .shell > .eyebrow {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.principle-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+}
+
+.principle-grid article { padding-top: 16px; }
+.principle-grid h3 { font-size: 25px; }
+.principle-grid p { font-size: 16px; margin-bottom: 0; }
+
+.guide-layout { gap: 40px; align-items: center; }
+.guide-questions summary { padding-block: 17px; font-size: 17px; }
+.guide-questions details > p { font-size: 16px; padding-bottom: 20px; }
+
+.engagement-grid { margin: 24px 0; gap: 20px; }
+.engagement-grid article { padding: 22px; }
+.engagement-grid h3 { font-size: 25px; }
+.engagement-grid p { font-size: 16px; }
+#engagement > .button { align-self: flex-start; }
+
+@media (min-width: 1101px) and (max-height: 800px) {
+  :root { --section-space: 22px; }
+  #main .section h2 { font-size: 32px; }
+  .hero h1 { font-size: clamp(40px, 3.5vw, 54px); }
+  .hero .core-composition { max-width: 300px; }
+
+  #connected-detail {
+    display: grid;
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.3fr);
+    gap: 16px 24px;
+    align-items: start;
+  }
+
+  .mandate-context {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px 0 0;
+  }
+
+  .mandate-context h3 { font-size: 23px; }
+  .mandate-priority > p:last-child { font-size: 19px; }
+
+  .connected-roles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .connected-roles article { padding: 14px; }
+  .connected-roles h4 { font-size: 20px; }
+  .connected-output { grid-column: 1 / -1; margin: 0; }
+}
+
+@media (max-width: 1100px) {
+  .connected-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .connected-output { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 800px) {
+  :root { --section-space: 32px; }
+
+  #main > section { min-height: auto; }
+  #main > .hero { min-height: var(--section-height); }
+
+  .hero-grid { padding-block: 30px; }
+  .expertise-layout,
+  .connected-heading,
+  .mandate-context,
+  .principles > .shell {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .principles > .shell > .eyebrow { grid-column: auto; }
+  .division-detail { padding: 22px; }
+  .audience-detail { gap: 20px; }
+  .situation-selector button { font-size: 16px; }
+  .guide-layout { gap: 28px; }
+}
+
+@media (max-width: 480px) {
+  .connected-roles,
+  .principle-grid { grid-template-columns: 1fr; }
+}
+
+/* Balance the expertise selector and explanation against the service scope. */
+.expertise-rail {
+  min-width: 0;
+}
+
+.expertise-rail > .expertise-flow {
+  margin: 18px 0 0;
+}
+
+.expertise-rail .expertise-flow-detail {
+  min-height: 125px;
+}
+
+@media (max-width: 800px) {
+  .expertise-rail .expertise-flow-detail {
+    min-height: 0;
+  }
+}

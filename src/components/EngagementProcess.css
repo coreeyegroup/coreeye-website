@@ -1,0 +1,92 @@
+#main > .work-process > .shell {
+  display: block;
+}
+
+.work-heading {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 40px;
+}
+
+.work-heading > p {
+  max-width: 55ch;
+  margin: 0;
+  color: #c9d7dc;
+  font-size: 16px;
+}
+
+.work-stages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 24px 0;
+  border: 1px solid #718893;
+}
+
+.work-stages button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 68px;
+  padding: 16px 20px;
+  border: 0;
+  border-right: 1px solid #718893;
+  background: transparent;
+  color: #f7f6f2;
+  text-align: left;
+}
+
+.work-stages button:last-child { border-right: 0; }
+.work-stages button > span:last-child { margin-left: auto; }
+.work-stages strong { font-size: 18px; font-weight: 500; }
+.work-number { color: #e2cda3; font-size: 12px; }
+.work-stages button:hover { background: #284957; }
+.work-stages button[aria-pressed=true] { background: #e2cda3; color: #102735; }
+.work-stages button[aria-pressed=true] .work-number { color: #614b27; }
+
+.work-detail {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  align-items: start;
+  gap: 40px;
+  padding-top: 22px;
+  border-top: 1px solid #718893;
+}
+
+.work-detail h3 { font-size: clamp(25px, 2.2vw, 33px); }
+.work-detail p,
+.work-detail li { font-size: 16px; color: #d0dce0; }
+.work-detail ul { padding-left: 20px; margin-bottom: 0; }
+.work-detail li { padding-block: 3px; }
+
+.work-outcomes {
+  display: grid;
+  gap: 18px;
+}
+
+.work-outcomes > div {
+  border-left: 2px solid #b69f70;
+  padding: 16px 20px;
+  background: #ffffff05;
+}
+
+.work-outcomes p:last-child { margin: 0; }
+#main .work-process .eyebrow { color: #e2cda3; }
+#main .work-process .work-note {
+  margin: 18px 0 0;
+  font-size: 12px;
+  color: #b8cbd2;
+}
+
+@media (min-width: 801px) {
+  .work-detail { min-height: 300px; }
+}
+
+@media (max-width: 800px) {
+  .work-heading,
+  .work-detail { grid-template-columns: 1fr; gap: 24px; }
+  .work-stages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .work-stages button { padding: 14px; }
+  .work-stages button:nth-child(2) { border-right: 0; }
+  .work-stages button:nth-child(-n+2) { border-bottom: 1px solid #718893; }
+}
