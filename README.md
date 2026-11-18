@@ -30,12 +30,15 @@ cd ~/coreeye-website &&
 
 The script checks that tracked files match the fetched commit, installs
 locked dependencies, and builds as the checkout owner. It stages the files
-in a separate release directory and switches the `current` symlink. Caddy
-serves the new release without a reload on routine updates.
+in a separate release directory and switches the `current` symlink. The first
+publish with the public indexing fix backs up and reloads Caddy once to clear
+the old robots header on the public homepage and expertise pages. Subsequent
+releases use the symlink without a Caddy reload.
 
 After activation, the script checks the HTTPS origin for the homepage, all four
-expertise pages, and the enquiry API. If a check fails, it restores the previous
-symlink and, during first setup, the previous configuration. The original site
+expertise pages, and the enquiry API. It also checks the public page responses
+for a restrictive robots header. If a check fails, it restores the previous
+symlink and any Caddy configuration changed during the publish. The original site
 files and release directories are retained. The public Cloudflare response and
 actual mail delivery can be checked separately. The script publishes the
 frontend and leaves the existing Node enquiry service running.
@@ -46,6 +49,9 @@ frontend and leaves the existing Node enquiry service running.
 npm ci
 npm run dev
 ```
+
+The development server adds a `noindex, nofollow` meta tag. The production
+build uses the public title and description without that tag.
 
 The frontend uses React, TypeScript, Vite, and Oxlint.
 

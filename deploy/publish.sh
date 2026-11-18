@@ -24,6 +24,8 @@ root_suffix='([[:blank:]]*(#.*)?)$'
 site_pattern='/var/www/coreeyegroup\.com'
 old_root="$root_prefix$site_pattern/(public|releases/[[:alnum:]_.-]+)$root_suffix"
 stable_root="$root_prefix$site_pattern/current$root_suffix"
+public_site='^[[:blank:]]*(https://)?coreeyegroup\.com(:443)?[[:blank:]]*\{[[:blank:]]*(#.*)?$'
+public_robots='^[[:blank:]]*header[[:blank:]]+@coreeyePublicPages[[:blank:]]+-X-Robots-Tag[[:blank:]]*$'
 commit=$(git rev-parse HEAD)
 
 fail() {
@@ -54,6 +56,12 @@ else
   [[ "$root_count" == 1 ]] ||
     fail 'The stable Caddy root is missing. Run once with --setup-caddy.'
 fi
+update_robots=0
+if ! sudo -n grep -Eq "$public_robots" "$config"; then
+  matches=$(sudo -n grep -Ec "$public_site" "$config" || true)
+  [[ "$matches" == 1 ]] || fail 'Expected one coreeyegroup.com site block in the Caddyfile.'
+  update_robots=1
+fi
 if [[ -e "$current" && ! -L "$current" ]]; then
   fail "$current already exists and is not a symlink."
 fi
@@ -64,7 +72,9 @@ check_checkout
 test -s dist/index.html
 
 sudo -v
-response=$(mktemp)
+probe_dir=$(mktemp -d)
+response=$probe_dir/body
+headers=$probe_dir/headers
 link_stage=''
 candidate=''
 backup=''
@@ -96,7 +106,8 @@ finish() {
       echo 'Previous website configuration restored.' >&2
     fi
   fi
-  rm -f -- "$response"
+  rm -f -- "$response" "$headers"
+  rmdir -- "$probe_dir"
   if [[ -n "$candidate" ]]; then
     sudo -n rm -f -- "$candidate"
   fi
@@ -118,14 +129,21 @@ sudo -n cp -R -- dist/. "$release/"
 sudo -n chmod -R a+rX "$release"
 sudo -n -u caddy test -r "$release/index.html"
 
-if (( setup_caddy )); then
+if (( setup_caddy || update_robots )); then
   sudo -n install -d -m 0700 /var/backups/coreeyegroup
   backup=$(sudo -n mktemp /var/backups/coreeyegroup/Caddyfile.XXXXXXXX)
   sudo -n cp -p -- "$config" "$backup"
   candidate=$(sudo -n mktemp /etc/caddy/.coreeye-Caddyfile.XXXXXXXX)
   sudo -n cp -p -- "$config" "$candidate"
   sudo -n cmp -s "$candidate" "$backup" || fail 'Caddy configuration changed during setup.'
-  sudo -n sed -Ei "s~$old_root~\1\2$current\5\n\1rewrite /expertise/* /index.html~" "$candidate"
+  if (( setup_caddy )); then
+    sudo -n sed -Ei "s~$old_root~\1\2$current\5\n\1rewrite /expertise/* /index.html~" "$candidate"
+  fi
+  if (( update_robots )); then
+    # Place the deletion at the start of the production site so it wraps inherited response headers.
+    sudo -n sed -Ei "\~$public_site~a\  @coreeyePublicPages path / /index.html /expertise/*\n  header @coreeyePublicPages -X-Robots-Tag" "$candidate"
+    sudo -n grep -Eq "$public_robots" "$candidate" || fail 'The public robots header rule was not added.'
+  fi
   sudo -n grep -Eq "$stable_root" "$candidate" || fail 'The candidate Caddy root was not updated.'
   sudo -n caddy validate --config "$candidate" --adapter caddyfile
   echo "Caddy backup: $backup"
@@ -136,7 +154,7 @@ sudo -n ln -s "$release" "$link_stage/current"
 sudo -n mv -Tf "$link_stage/current" "$current"
 link_changed=1
 
-if (( setup_caddy )); then
+if (( setup_caddy || update_robots )); then
   sudo -n cmp -s "$config" "$backup" || fail 'Caddy configuration changed before activation.'
   sudo -n mv -Tf "$candidate" "$config"
   config_changed=1
@@ -145,8 +163,11 @@ fi
 
 origin=(--resolve "$domain:443:127.0.0.1" --max-time 10)
 for path in / /expertise/finance /expertise/it /expertise/cyber /expertise/digital; do
-  curl -fsS "${origin[@]}" -o "$response" "https://$domain$path"
+  curl -fsS "${origin[@]}" -D "$headers" -o "$response" "https://$domain$path"
   cmp -s "$response" "$release/index.html" || fail "Unexpected HTML for $path."
+  if grep -Eiq '^x-robots-tag:.*\b(noindex|nofollow|none)\b' "$headers"; then
+    fail "Indexing is still blocked by the HTTP header for $path."
+  fi
   printf 'OK %s\n' "$path"
 done
 
