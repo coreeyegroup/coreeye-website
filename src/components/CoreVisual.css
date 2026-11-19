@@ -7,13 +7,33 @@
   padding-bottom:17px;
   border-bottom:1px solid #8da4ad50;
 }
-.core-composition{position:relative;margin:-10px -15px 0}
-.core-composition svg{display:block;width:100%;height:auto}
-.quantum-particle-moving{display:none}
-@media(prefers-reduced-motion:no-preference){
-  .quantum-particle-moving{display:inline}
-  .quantum-particle-still{display:none}
+.core-composition{
+  position:relative;
+  aspect-ratio:24/15;
+  background:radial-gradient(ellipse at 50% 51%,#37698733,transparent 63%);
 }
+.quantum-illustration{
+  display:block;
+  width:100%;
+  height:100%;
+}
+.core-motion-toggle{
+  position:absolute;
+  right:0;
+  bottom:0;
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  padding:0;
+  border:1px solid #9ebacc88;
+  border-radius:50%;
+  background:#142b38;
+  color:#e0f1f9;
+}
+.core-motion-toggle:hover{background:#254757;border-color:#c4dce9}
+.core-motion-toggle:focus-visible{outline:2px solid #c9efff;outline-offset:3px}
+.core-motion-toggle svg{width:17px;height:17px}
 .core-disciplines{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .core-disciplines button{
   display:grid;
