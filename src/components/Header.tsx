@@ -1,5 +1,6 @@
 import ExpertiseMenu from './ExpertiseMenu'
 import { useEffect, useRef, useState } from 'react'
+import coreEyeLogo from '../assets/core-eye-master-logo.png'
 
 const links = [
   { id: 'group', label: 'The Group' },
@@ -100,11 +101,16 @@ export default function Header() {
   }, [open])
 
   return (
-    <header ref={header}>
+    <header className="site-header" ref={header}>
       <div className="shell header-inner">
         <a className="brand" href="/" onClick={() => setOpen(false)}>
-          CORE EYE GROUP
-          <small>PRIVATE INSTITUTIONAL STEWARDSHIP</small>
+          <span className="brand-mark" aria-hidden="true">
+            <img src={coreEyeLogo} width="1536" height="1024" alt="" />
+          </span>
+          <span>
+            CORE EYE GROUP
+            <small>PRIVATE INSTITUTIONAL STEWARDSHIP</small>
+          </span>
         </a>
         <button ref={menu} id="menu-toggle" className="menu-toggle"
           aria-expanded={open} aria-controls="main-nav"

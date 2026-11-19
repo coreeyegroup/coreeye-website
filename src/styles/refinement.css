@@ -300,16 +300,6 @@ header nav a:last-child:hover{background:#e9eee8}
   max-width:440px;
   margin:0 auto 12px;
 }
-.hero .core-purpose strong{
-  font-size:27px;
-  margin:8px 0;
-}
-.hero .core-purpose>span{
-  font-size:10px;
-}
-.hero .core-purpose small{
-  font-size:12px;
-}
 .hero .core-disciplines{
   gap:10px;
 }
@@ -343,15 +333,64 @@ header nav a:last-child:hover{background:#e9eee8}
     line-height:1.14;
   }
   .hero .core-composition{max-width:400px}
-  .hero .core-purpose strong{font-size:26px}
   .hero .core-visual{padding-top:5px}
   .hero-copy{font-size:17px}
 }
 @media(max-width:420px){
   .hero h1{font-size:38px}
-  .hero .core-purpose strong{font-size:23px}
-  .hero .core-purpose small{font-size:11px}
   .hero .core-disciplines button{padding:14px 12px}
   .hero .actions{align-items:stretch}
   .hero .button{width:100%;text-align:center}
+}
+
+.site-header{
+  background:#0c1822;
+  color:#f5f2eb;
+  border-color:#ffffff26;
+}
+.site-header .brand{
+  display:inline-flex;
+  align-items:center;
+  gap:14px;
+  white-space:nowrap;
+  font:22px/1.1 Georgia,'Times New Roman',serif;
+  letter-spacing:.075em;
+}
+.site-header .brand small{
+  color:#c4beb1;
+  margin-top:7px;
+  letter-spacing:.11em;
+}
+.brand-mark{
+  flex:none;
+  width:48px;
+  aspect-ratio:764/668;
+  position:relative;
+  overflow:hidden;
+  mix-blend-mode:screen;
+}
+.brand-mark img{
+  position:absolute;
+  left:-50.39%;
+  top:-26.95%;
+  width:201.05%;
+  height:auto;
+  max-width:none;
+  filter:contrast(1.16);
+}
+.site-header .expertise-trigger,.site-header .menu-toggle{
+  color:#f5f2eb;
+}
+.site-header nav > a:hover,.site-header nav > a[aria-current="location"],
+.site-header .expertise-trigger:hover,.site-header .expertise-trigger[aria-expanded="true"],
+.site-header .expertise-trigger[aria-current="location"]{
+  color:#e6cf9a;
+}
+.site-header nav > a:last-child{border-color:#c3ae83;color:#eee1c4}
+.site-header nav > a:last-child:hover{background:#ffffff12}
+@media(max-width:800px){
+  .site-header nav{background:#0c1822;border-color:#ffffff26}
+  .site-header .brand{font-size:17px;gap:10px}
+  .site-header .brand small{font-size:8px}
+  .brand-mark{width:38px}
 }
