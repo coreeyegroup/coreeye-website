@@ -5,6 +5,7 @@ const motionPreference = '(prefers-reduced-motion: reduce)'
 const ringCount = 24
 const maxDistance = 24
 const strandCount = 18
+const maxCanvasPixels = 3_000_000
 
 // Keep the particle field reproducible while distributing phases independently.
 function phase(seed: number) {
@@ -97,7 +98,7 @@ function drawCore(ctx: CanvasRenderingContext2D, width: number, height: number, 
   ctx.globalAlpha = 1
   ctx.fillStyle = '#e2f8ff'
   ctx.beginPath()
-  ctx.arc(cx, cy, Math.max(1.4, width * .005), 0, fullTurn)
+  ctx.arc(cx, cy, Math.min(4, Math.max(1.4, width * .005)), 0, fullTurn)
   ctx.fill()
 }
 
@@ -145,11 +146,12 @@ export default function QuantumCore() {
     const resize = new ResizeObserver(([entry]) => {
       width = entry.contentRect.width
       height = entry.contentRect.height
-      const ratio = Math.min(window.devicePixelRatio || 1, 2)
+      if (!width || !height) return
+      const ratio = Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(maxCanvasPixels / (width * height)))
       canvas.width = Math.round(width * ratio)
       canvas.height = Math.round(height * ratio)
       context.setTransform(ratio, 0, 0, ratio, 0, 0)
-      if (width && height) drawCore(context, width, height, elapsed.current)
+      drawCore(context, width, height, elapsed.current)
     })
     const visibility = new IntersectionObserver(([entry]) => {
       inView = entry.isIntersecting

@@ -10,15 +10,27 @@
 .core-composition{
   position:relative;
   aspect-ratio:24/15;
-  background:radial-gradient(ellipse at 50% 51%,#37698733,transparent 63%);
 }
 .quantum-illustration{
+  position:absolute;
+  top:51%;
+  left:50%;
   display:block;
-  width:100%;
-  height:100%;
+  width:144vw;
+  height:max(100%,110svh);
+  transform:translate(-50%,-51%);
+  pointer-events:none;
+  mask-image:radial-gradient(ellipse 50% 50% at 50% 51%,#000 67%,transparent);
+}
+.core-visual>.eyebrow,
+.core-disciplines,
+.core-caption{
+  position:relative;
+  z-index:1;
 }
 .core-motion-toggle{
   position:absolute;
+  z-index:2;
   right:0;
   bottom:0;
   display:grid;
@@ -26,14 +38,14 @@
   width:44px;
   height:44px;
   padding:0;
-  border:1px solid #9ebacc88;
+  border:0;
   border-radius:50%;
-  background:#142b38;
-  color:#e0f1f9;
+  background:transparent;
+  color:#a8c2cf;
 }
-.core-motion-toggle:hover{background:#254757;border-color:#c4dce9}
-.core-motion-toggle:focus-visible{outline:2px solid #c9efff;outline-offset:3px}
-.core-motion-toggle svg{width:17px;height:17px}
+.core-motion-toggle:hover{background:#294754;color:#e0f1f9}
+.core-motion-toggle:focus-visible{outline:2px solid #c9efff;outline-offset:1px}
+.core-motion-toggle svg{width:15px;height:15px}
 .core-disciplines{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .core-disciplines button{
   display:grid;
@@ -62,6 +74,7 @@
 .core-caption{font-size:13px;color:#c2d3d9;margin-bottom:0}
 @media(max-width:800px){
   .core-visual{max-width:560px;width:100%;margin:auto;padding:0}
+  .quantum-illustration{width:125vw;height:max(100%,75svh)}
 }
 @media(max-width:420px){
   .core-disciplines button{padding:15px}

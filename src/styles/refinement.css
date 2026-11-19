@@ -36,6 +36,7 @@ header nav a:hover{text-decoration:none;color:#76592d}
 .hero{
   position:relative;
   overflow:hidden;
+  isolation:isolate;
   background:
     radial-gradient(ellipse at 87% 24%,#32576566,transparent 55%),
     linear-gradient(125deg,#0b202e,#183442);
@@ -260,6 +261,11 @@ header nav a:last-child:hover{background:#e9eee8}
   align-items:start;
   gap:clamp(30px,4vw,64px);
   padding:46px 0 40px;
+}
+.hero-grid>div:first-child,
+.hero-base{
+  position:relative;
+  z-index:1;
 }
 .hero-grid>div:first-child{
   padding-top:14px;
