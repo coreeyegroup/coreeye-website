@@ -189,7 +189,7 @@ html {
   :root { --section-space: 22px; }
   #main .section h2 { font-size: 32px; }
   .hero h1 { font-size: clamp(40px, 3.5vw, 54px); }
-  .hero .core-composition { max-width: 300px; }
+  .hero .core-composition { max-height: 187.5px; }
 
   #connected-detail {
     display: grid;

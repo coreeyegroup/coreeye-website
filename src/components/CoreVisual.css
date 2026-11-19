@@ -4,8 +4,7 @@
   padding:24px 0;
 }
 .core-visual>.eyebrow{
-  padding-bottom:17px;
-  border-bottom:1px solid #8da4ad50;
+  padding-bottom:18px;
 }
 .core-composition{
   position:relative;
@@ -31,7 +30,7 @@
 .core-motion-toggle{
   position:absolute;
   z-index:2;
-  right:0;
+  right:-10px;
   bottom:0;
   display:grid;
   place-items:center;
