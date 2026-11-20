@@ -1,3 +1,4 @@
+import Arrow from './Arrow'
 import { useState } from 'react'
 import './EngagementProcess.css'
 
@@ -89,7 +90,7 @@ export default function EngagementProcess() {
             >
               <span className="work-number">0{index + 1}</span>
               <strong>{item.name}</strong>
-              <span aria-hidden="true">{index < stages.length - 1 ? '→' : '↗'}</span>
+              <span aria-hidden="true"><Arrow direction={index < stages.length - 1 ? 'right' : 'diagonal'} /></span>
             </button>
           ))}
         </div>

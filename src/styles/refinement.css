@@ -400,3 +400,24 @@ header nav a:last-child:hover{background:#e9eee8}
   .site-header .brand small{font-size:8px}
   .brand-mark{width:38px}
 }
+
+.link-arrow {
+  width: 1em;
+  height: 1em;
+  vertical-align: -.14em;
+}
+
+.hero-grid > div:first-child::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -2rem -1rem;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 28% 50%, #0b202eaa, transparent 74%);
+}
+
+@media (max-width: 800px) {
+  .hero-grid > div:first-child::before {
+    background: linear-gradient(#0b202e88 67%, transparent);
+  }
+}

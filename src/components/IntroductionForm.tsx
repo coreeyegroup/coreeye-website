@@ -1,3 +1,5 @@
+import Arrow from './Arrow'
+import { divisions } from '../content/company'
 import { useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import './IntroductionForm.css'
@@ -115,7 +117,7 @@ export default function IntroductionForm({
 
           <label htmlFor="intro-email">Email address
             <input id="intro-email" name="email" type="email"
-              autoComplete="email" required maxLength={254} />
+              autoComplete="email" aria-describedby="intro-email-help" required maxLength={254} />
           </label>
 
           <label htmlFor="intro-organisation">Organisation <span>(optional)</span>
@@ -126,11 +128,15 @@ export default function IntroductionForm({
           <label htmlFor="intro-interest">Area of interest
             <select id="intro-interest" name="interest" required defaultValue={initialInterest}>
               <option value="" disabled>Select an area</option>
-              {['Finance', 'IT', 'Cyber', 'Digital', 'Integrated requirement', 'Other']
-                .map(area => <option key={area} value={area}>{area}</option>)}
+              {divisions.map(item => <option key={item.id} value={item.interest}>{item.capability}</option>)}
+              <option>Integrated requirement</option>
+              <option>Strategic Partnerships</option>
+              <option>Other</option>
             </select>
           </label>
         </div>
+
+        <p id="intro-email-help" className="introduction-help">Use your business email if you are enquiring on behalf of an organisation.</p>
 
         <label htmlFor="intro-message">Brief outline of your requirement
           <textarea id="intro-message" name="message" required
@@ -153,10 +159,14 @@ export default function IntroductionForm({
             to review and respond to this enquiry.</span>
         </label>
 
+        <p className="introduction-help">
+          <a href="/privacy/" target="_blank" rel="noopener">How we handle enquiries (opens in a new tab)</a>
+        </p>
+
         {error && <p className="introduction-error" role="alert">{error}</p>}
 
         <button className="button dark-button" type="submit" disabled={!secure}>
-          {pending ? 'Submitting…' : 'Submit private introduction ↗'}
+          {pending ? 'Submitting…' : <>Submit private introduction <Arrow /></>}
         </button>
       </fieldset>
 

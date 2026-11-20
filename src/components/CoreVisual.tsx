@@ -1,3 +1,4 @@
+import Arrow from './Arrow'
 import { divisions } from '../content/company'
 import QuantumCore from './QuantumCore'
 import './CoreVisual.css'
@@ -17,8 +18,8 @@ export default function CoreVisual({ onExplore }: Props) {
         {divisions.map((item, index) => (
           <button key={item.id} onClick={() => onExplore(index)}>
             <span>0{index + 1} / {item.id.toUpperCase()}</span>
-            <strong>{['Intelligence', 'Continuity', 'Protection', 'Presence'][index]}</strong>
-            <span aria-hidden="true">↗</span>
+            <strong>{item.capability}</strong>
+            <span aria-hidden="true"><Arrow /></span>
           </button>
         ))}
       </div>

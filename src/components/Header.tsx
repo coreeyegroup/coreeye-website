@@ -1,3 +1,4 @@
+import Arrow from './Arrow'
 import ExpertiseMenu from './ExpertiseMenu'
 import { useEffect, useRef, useState } from 'react'
 import coreEyeLogo from '../assets/core-eye-master-logo.png'
@@ -6,8 +7,8 @@ const links = [
   { id: 'group', label: 'The Group' },
   { id: 'expertise', label: 'Expertise' },
   { id: 'clients', label: 'Who We Serve' },
-  { id: 'connected', label: 'Our Approach' },
-  { id: 'engagement', label: 'Private Engagement ↗' },
+  { id: 'working-method', label: 'Our Approach' },
+  { id: 'engagement', label: 'Private Engagement' },
 ]
 
 export default function Header() {
@@ -122,10 +123,11 @@ export default function Header() {
           {links.map(link => link.id === 'expertise' ? (
             <ExpertiseMenu key={link.id} onNavigate={() => setOpen(false)} />
           ) : (
-            <a key={link.id} href={`${window.location.pathname === '/' ? '' : '/'}#${link.id}`}
-              aria-current={active === link.id ? 'location' : undefined}
+            <a key={link.id} href={link.id === 'engagement' ? '/contact/' : `/#${link.id}`}
+              aria-current={link.id === 'engagement' && window.location.pathname.replace(/\/+$/, '') === '/contact'
+                ? 'page' : active === link.id ? 'location' : undefined}
               onClick={() => setOpen(false)}>
-              {link.label}
+              {link.label}{link.id === 'engagement' && <> <Arrow /></>}
             </a>
           ))}
         </nav>

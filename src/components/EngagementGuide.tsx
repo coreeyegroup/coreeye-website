@@ -1,3 +1,4 @@
+import Arrow from './Arrow'
 import './EngagementGuide.css'
 
 const questions = [
@@ -32,7 +33,7 @@ export default function EngagementGuide() {
           <h2>A clearer understanding.<br />A considered next step.</h2>
           <p>Understand how a requirement becomes a defined engagement,
             and what is useful to share at the beginning.</p>
-          <a href="#engagement">Explore private engagement ↗</a>
+          <a href="#engagement">Explore private engagement <Arrow /></a>
         </div>
         <div className="guide-questions">
           {questions.map((question, index) => (

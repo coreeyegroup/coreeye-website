@@ -1,3 +1,4 @@
+import Arrow from '../components/Arrow'
 import ExpertiseFlow from '../components/ExpertiseFlow'
 import './DivisionProcess.css'
 import Footer from '../components/Footer'
@@ -14,7 +15,10 @@ export default function DivisionPage({ id }: { id: string }) {
         <p className="eyebrow">Core Eye Group</p>
         <h1>Page not found.</h1>
         <p>The requested page is unavailable.</p>
-        <a className="button dark-button" href="/">Return to the Group →</a>
+        <div className="actions">
+          <a className="button dark-button" href="/">Return to the Group <Arrow direction="right" /></a>
+          <a className="quiet-link" href="/contact/">Contact us <Arrow /></a>
+        </div>
       </main>
     )
   }
@@ -28,10 +32,10 @@ export default function DivisionPage({ id }: { id: string }) {
         <section className="division-page-hero">
           <div className="shell">
             <p className="eyebrow">The Group / Expertise / {division.name}</p>
-            <h1>{division.verb}</h1>
+            <h1>{division.capability}</h1>
             <p>{division.summary}</p>
-            <a className="button" href={`/?enquiry=${division.id}#engagement`}>
-              Discuss a {division.name} requirement ↗
+            <a className="button" href={`/contact/?enquiry=${division.id}`}>
+              Discuss your requirement <Arrow />
             </a>
           </div>
         </section>
@@ -56,6 +60,8 @@ export default function DivisionPage({ id }: { id: string }) {
             <div className="deliverable">
               <p className="eyebrow">Potential engagement output</p>
               <p>{division.output}</p>
+              <h3>Illustrative engagement</h3>
+              <p>{division.example}</p>
             </div>
           </div>
         </section>
@@ -68,7 +74,7 @@ export default function DivisionPage({ id }: { id: string }) {
               <p>Explore the stages below to see how the discipline
                 connects information, specialist work and practical deliverables.</p>
               <a className="quiet-link" href="/#working-method">
-                Explore our working method →
+                Explore our working method <Arrow direction="right" />
               </a>
             </div>
             <ExpertiseFlow key={division.id} division={division.id} />
@@ -85,14 +91,14 @@ export default function DivisionPage({ id }: { id: string }) {
               <p>Objectives, deliverables, responsibilities and communication
                 arrangements are established for the agreed work.</p>
               <p>{division.id === 'finance'
-                ? 'Financial research, technology, advisory and execution activities require distinct scopes. Any applicable professional permissions must be established before the relevant activity is undertaken.'
+                ? 'Public enquiries for this discipline cover financial research, reporting and technology supporting financial operations.'
                 : division.id === 'cyber'
                 ? 'Assessments and testing require explicit authorisation. Protective measures reduce risk; they cannot eliminate every threat.'
                 : division.id === 'it'
                 ? 'System ownership, hosting, recovery objectives, documentation and support responsibilities are defined within the engagement.'
                 : 'Identity and communication work requires clear ownership and approval arrangements. Public opinion and reputation outcomes cannot be guaranteed.'}
               </p>
-              <a className="quiet-link" href="/#engagement-guide">Read the engagement guide →</a>
+              <a className="quiet-link" href="/#engagement-guide">Read the engagement guide <Arrow direction="right" /></a>
             </div>
           </div>
         </section>
@@ -102,8 +108,8 @@ export default function DivisionPage({ id }: { id: string }) {
           <h2>A broader perspective.</h2>
           <div className="division-page-links">
             {divisions.filter(item => item.id !== id).map(item => (
-              <a key={item.id} href={`/expertise/${item.id}`}>
-                <strong>{item.name} ↗</strong>
+              <a key={item.id} href={`/expertise/${item.id}/`}>
+                <strong>{item.capability} <Arrow /></strong>
                 <span>{item.verb}</span>
               </a>
             ))}

@@ -1,3 +1,4 @@
+import Arrow from './Arrow'
 import { useEffect, useState } from 'react'
 import './PageExperience.css'
 
@@ -73,7 +74,7 @@ export default function PageExperience() {
   return (
     <button className="back-to-top" hidden={!showTop}
       onClick={returnToTop} aria-label="Back to top of page">
-      <span aria-hidden="true">↑</span>
+      <span aria-hidden="true"><Arrow direction="up" /></span>
       <span>Top</span>
     </button>
   )

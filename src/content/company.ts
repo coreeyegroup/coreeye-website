@@ -2,6 +2,9 @@ export const divisions = [
   {
     id: 'finance',
     name: 'Core Eye Finance',
+    capability: 'Financial Capital',
+    interest: 'Finance',
+    example: 'A family office needs a clearer view of market developments and exposure across its existing reporting. A proposed engagement could define the reporting inputs and deliver a financial intelligence brief.',
     verb: 'Inform consequential decisions.',
     summary: 'Financial intelligence and technology supporting a clearer understanding of information, markets and risk.',
     scope: ['Market and financial intelligence', 'Reporting and decision-support requirements', 'Technology supporting financial operations'],
@@ -10,6 +13,9 @@ export const divisions = [
   {
     id: 'it',
     name: 'Core Eye IT',
+    capability: 'Technology Infrastructure',
+    interest: 'IT',
+    example: 'A family office depends on several systems with undocumented links. A proposed engagement could map those dependencies and deliver a continuity plan with named responsibilities.',
     verb: 'Engineer enduring foundations.',
     summary: 'Enterprise applications and infrastructure designed around ownership, maintainability and operational continuity.',
     scope: ['Enterprise software and integrations', 'Infrastructure and architecture', 'Recovery, documentation and handover'],
@@ -18,6 +24,9 @@ export const divisions = [
   {
     id: 'cyber',
     name: 'Core Eye Cyber',
+    capability: 'Cyber Intelligence',
+    interest: 'Cyber',
+    example: 'An institution is reviewing who can access sensitive information. With its authorisation, a proposed engagement could review access arrangements and deliver a prioritised protection plan.',
     verb: 'Understand and reduce exposure.',
     summary: 'Cybersecurity, identity and privacy measures shaped around sensitive information and the people responsible for it.',
     scope: ['Authorised exposure and risk assessment', 'Identity and access safeguards', 'Secure communication and response planning'],
@@ -26,6 +35,9 @@ export const divisions = [
   {
     id: 'digital',
     name: 'Core Eye Digital',
+    capability: 'Digital Authority',
+    interest: 'Digital',
+    example: 'An organisation needs a consistent public presence across its website and official channels. A proposed engagement could review those channels and deliver an identity and publishing framework.',
     verb: 'Give substance a considered presence.',
     summary: 'Institutional identity, websites and digital communication for principals whose visibility requires careful judgment.',
     scope: ['Brand identity and digital experiences', 'Content and reputation governance', 'Digital ownership and legacy planning'],

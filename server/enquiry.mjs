@@ -24,7 +24,7 @@ const origins = new Set([
 ])
 
 const subjects = new Set([
-  'Finance', 'IT', 'Cyber', 'Digital', 'Integrated requirement', 'Other',
+  'Finance', 'IT', 'Cyber', 'Digital', 'Integrated requirement', 'Strategic Partnerships', 'Other',
 ])
 
 const attempts = new Map()
@@ -72,7 +72,7 @@ function text(value, minimum, maximum, multiline = false) {
 
 const server = http.createServer(async (req, res) => {
   if (req.url === '/health' && req.method === 'GET') {
-    return reply(res, 200, { status: 'ok' })
+    return reply(res, 200, { status: 'ok', interests: [...subjects] })
   }
 
   if (req.url !== '/api/enquiries') {

@@ -25,6 +25,10 @@ site_pattern='/var/www/coreeyegroup\.com'
 old_root="$root_prefix$site_pattern/(public|releases/[[:alnum:]_.-]+)$root_suffix"
 stable_root="$root_prefix$site_pattern/current$root_suffix"
 public_site='^[[:blank:]]*(https://)?coreeyegroup\.com(:443)?[[:blank:]]*\{[[:blank:]]*(#.*)?$'
+public_pages='^[[:blank:]]*@coreeyePublicPages path / /index\.html /expertise/\* /contact /contact/\* /privacy /privacy/\* /sitemap\.xml[[:blank:]]*$'
+legacy_pages='^[[:blank:]]*@coreeyePublicPages path / /index\.html /expertise/\*[[:blank:]]*$'
+legacy_rewrite='^([[:blank:]]*)rewrite[[:blank:]]+/expertise/\*[[:blank:]]+/index\.html[[:blank:]]*$'
+static_routes='^[[:blank:]]*# coreeye-static-routes[[:blank:]]*$'
 public_robots='^[[:blank:]]*header[[:blank:]]+@coreeyePublicPages[[:blank:]]+-X-Robots-Tag[[:blank:]]*$'
 commit=$(git rev-parse HEAD)
 
@@ -56,12 +60,22 @@ else
   [[ "$root_count" == 1 ]] ||
     fail 'The stable Caddy root is missing. Run once with --setup-caddy.'
 fi
-update_robots=0
-if ! sudo -n grep -Eq "$public_robots" "$config"; then
+update_caddy=$setup_caddy
+if ! sudo -n grep -Eq "$static_routes" "$config" ||
+   ! sudo -n grep -Eq "$public_pages" "$config" ||
+   ! sudo -n grep -Eq "$public_robots" "$config"; then
   matches=$(sudo -n grep -Ec "$public_site" "$config" || true)
   [[ "$matches" == 1 ]] || fail 'Expected one coreeyegroup.com site block in the Caddyfile.'
-  update_robots=1
+  update_caddy=1
 fi
+
+service_health=$(curl -fsS --max-time 5 http://127.0.0.1:3107/health) ||
+  fail 'The enquiry service is unavailable on 127.0.0.1:3107.'
+printf '%s' "$service_health" | node -e '
+  const health = JSON.parse(require("node:fs").readFileSync(0, "utf8"))
+  if (health.status !== "ok" || !health.interests?.includes("Strategic Partnerships")) process.exit(1)
+' || fail 'Update and restart the enquiry service before publishing. See README.md.'
+
 if [[ -e "$current" && ! -L "$current" ]]; then
   fail "$current already exists and is not a symlink."
 fi
@@ -129,7 +143,7 @@ sudo -n cp -R -- dist/. "$release/"
 sudo -n chmod -R a+rX "$release"
 sudo -n -u caddy test -r "$release/index.html"
 
-if (( setup_caddy || update_robots )); then
+if (( update_caddy )); then
   sudo -n install -d -m 0700 /var/backups/coreeyegroup
   backup=$(sudo -n mktemp /var/backups/coreeyegroup/Caddyfile.XXXXXXXX)
   sudo -n cp -p -- "$config" "$backup"
@@ -137,13 +151,27 @@ if (( setup_caddy || update_robots )); then
   sudo -n cp -p -- "$config" "$candidate"
   sudo -n cmp -s "$candidate" "$backup" || fail 'Caddy configuration changed during setup.'
   if (( setup_caddy )); then
-    sudo -n sed -Ei "s~$old_root~\1\2$current\5\n\1rewrite /expertise/* /index.html~" "$candidate"
+    sudo -n sed -Ei "s~$old_root~\1\2$current\5~" "$candidate"
   fi
-  if (( update_robots )); then
-    # Place the deletion at the start of the production site so it wraps inherited response headers.
-    sudo -n sed -Ei "\~$public_site~a\  @coreeyePublicPages path / /index.html /expertise/*\n  header @coreeyePublicPages -X-Robots-Tag" "$candidate"
-    sudo -n grep -Eq "$public_robots" "$candidate" || fail 'The public robots header rule was not added.'
+  if ! sudo -n grep -Eq "$static_routes" "$candidate"; then
+    if (( ! setup_caddy )); then
+      matches=$(sudo -n grep -Ec "$legacy_rewrite" "$candidate" || true)
+      [[ "$matches" == 1 ]] || fail 'Expected the existing expertise rewrite to appear once.'
+      sudo -n sed -Ei "s~$legacy_rewrite~~" "$candidate"
+    fi
+    sudo -n sed -Ei "\~$public_site~a\  # coreeye-static-routes\n  handle_errors 404 {\n    rewrite * /404.html\n    file_server\n  }" "$candidate"
+    sudo -n grep -Eq "$static_routes" "$candidate" || fail 'The static route marker was not added.'
   fi
+  matcher='@coreeyePublicPages path / /index.html /expertise/* /contact /contact/* /privacy /privacy/* /sitemap.xml'
+  if ! sudo -n grep -Eq "$public_robots" "$candidate"; then
+    sudo -n sed -Ei "\~$public_site~a\  $matcher\n  header @coreeyePublicPages -X-Robots-Tag" "$candidate"
+  elif ! sudo -n grep -Eq "$public_pages" "$candidate"; then
+    matches=$(sudo -n grep -Ec "$legacy_pages" "$candidate" || true)
+    [[ "$matches" == 1 ]] || fail 'Expected the existing public index matcher to appear once.'
+    sudo -n sed -Ei "s~$legacy_pages~  $matcher~" "$candidate"
+  fi
+  sudo -n grep -Eq "$public_pages" "$candidate" || fail 'The public index matcher was not updated.'
+  sudo -n grep -Eq "$public_robots" "$candidate" || fail 'The public robots header rule is missing.'
   sudo -n grep -Eq "$stable_root" "$candidate" || fail 'The candidate Caddy root was not updated.'
   sudo -n caddy validate --config "$candidate" --adapter caddyfile
   echo "Caddy backup: $backup"
@@ -154,7 +182,7 @@ sudo -n ln -s "$release" "$link_stage/current"
 sudo -n mv -Tf "$link_stage/current" "$current"
 link_changed=1
 
-if (( setup_caddy || update_robots )); then
+if (( update_caddy )); then
   sudo -n cmp -s "$config" "$backup" || fail 'Caddy configuration changed before activation.'
   sudo -n mv -Tf "$candidate" "$config"
   config_changed=1
@@ -162,14 +190,27 @@ if (( setup_caddy || update_robots )); then
 fi
 
 origin=(--resolve "$domain:443:127.0.0.1" --max-time 10)
-for path in / /expertise/finance /expertise/it /expertise/cyber /expertise/digital; do
+for path in / /expertise/finance/ /expertise/it/ /expertise/cyber/ /expertise/digital/ /contact/ /privacy/; do
   curl -fsS "${origin[@]}" -D "$headers" -o "$response" "https://$domain$path"
-  cmp -s "$response" "$release/index.html" || fail "Unexpected HTML for $path."
+  cmp -s "$response" "$release${path}index.html" || fail "Unexpected HTML for $path."
   if grep -Eiq '^x-robots-tag:.*\b(noindex|nofollow|none)\b' "$headers"; then
     fail "Indexing is still blocked by the HTTP header for $path."
   fi
   printf 'OK %s\n' "$path"
 done
+
+curl -fsS "${origin[@]}" -o "$response" "https://$domain/sitemap.xml"
+cmp -s "$response" "$release/sitemap.xml" || fail 'Unexpected sitemap.'
+echo 'OK /sitemap.xml'
+curl -fsS "${origin[@]}" -o "$response" "https://$domain/robots.txt"
+grep -qFx "Sitemap: https://$domain/sitemap.xml" "$response" || fail 'The robots file does not advertise the sitemap.'
+echo 'OK /robots.txt'
+
+missing_status=$(curl -sS "${origin[@]}" -o "$response" -w '%{http_code}' "https://$domain/expertise/coreeye-missing-page")
+if [[ "$missing_status" != 404 ]] || ! cmp -s "$response" "$release/404.html"; then
+  fail "Unexpected not-found response (HTTP $missing_status)."
+fi
+echo 'OK custom 404'
 
 api_status=$(curl -sS "${origin[@]}" -o "$response" -w '%{http_code}' "https://$domain/api/enquiries")
 if [[ "$api_status" != 405 ]] || ! grep -qF 'Method not allowed.' "$response"; then

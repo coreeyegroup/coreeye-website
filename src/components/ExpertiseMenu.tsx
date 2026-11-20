@@ -1,3 +1,4 @@
+import Arrow from './Arrow'
 import { useEffect, useRef, useState } from 'react'
 import { divisions } from '../content/company'
 import './ExpertiseMenu.css'
@@ -45,13 +46,13 @@ export default function ExpertiseMenu({ onNavigate }: { onNavigate: () => void }
       <div id="expertise-dropdown" className="expertise-dropdown" hidden={!open}>
         <p className="expertise-menu-label">Four specialist disciplines</p>
         {divisions.map(item => (
-          <a key={item.id} href={`/expertise/${item.id}`} onClick={navigate}>
-            <strong>{item.name}</strong>
+          <a key={item.id} href={`/expertise/${item.id}/`} onClick={navigate}>
+            <strong>{item.capability}</strong>
             <span>{item.verb}</span>
           </a>
         ))}
         <a className="expertise-overview" href="/#expertise" onClick={navigate}>
-          Explore the integrated perspective →
+          Explore the integrated perspective <Arrow direction="right" />
         </a>
       </div>
     </div>

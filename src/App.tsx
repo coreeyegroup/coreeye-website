@@ -1,3 +1,4 @@
+import Arrow from './components/Arrow'
 import IntroductionForm from './components/IntroductionForm'
 import GroupProfile from './components/GroupProfile'
 import ExpertiseFlow from './components/ExpertiseFlow'
@@ -8,6 +9,7 @@ import PageExperience from './components/PageExperience'
 import CoreVisual from './components/CoreVisual'
 import ConnectedExpertise from './components/ConnectedExpertise'
 import { useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import Header from './components/Header'
 import { audiences, divisions } from './content/company'
 import './styles/site.css'
@@ -37,6 +39,7 @@ export default function App() {
 
   const [division, setDivision] = useState(0)
   const [audience, setAudience] = useState(0)
+  const expertiseHeading = useRef<HTMLHeadingElement>(null)
   const dialog = useRef<HTMLDialogElement>(null)
   const introductionButton = useRef<HTMLButtonElement>(null)
   const introductionOrigin = useRef<HTMLElement | null>(null)
@@ -68,17 +71,12 @@ export default function App() {
   useEffect(() => {
     const url = new URL(window.location.href)
     const requested = url.searchParams.get('enquiry')
-    const interests: Record<string, string> = {
-      finance: 'Finance',
-      it: 'IT',
-      cyber: 'Cyber',
-      digital: 'Digital',
-    }
+    const interest = divisions.find(item => item.id === requested)?.interest
 
-    if (!requested || !interests[requested]) return
+    if (!interest) return
 
     const frame = requestAnimationFrame(() => {
-      setIntroductionInterest(interests[requested])
+      setIntroductionInterest(interest)
       introductionOrigin.current = introductionButton.current
       dialog.current?.showModal()
 
@@ -94,8 +92,9 @@ export default function App() {
   }, [])
 
   function explore(index: number) {
-    setDivision(index)
-    document.getElementById('expertise')?.scrollIntoView()
+    flushSync(() => setDivision(index))
+    expertiseHeading.current?.focus({ preventScroll: true })
+    expertiseHeading.current?.scrollIntoView({ block: 'start' })
   }
 
   return (
@@ -110,16 +109,16 @@ export default function App() {
               <p className="eyebrow">Intelligence · Discretion · Continuity</p>
               <h1>We operate at the <em>unseen core</em> of wealth, technology, and security</h1>
               <p className="hero-copy">
-                Financial intelligence. Enterprise engineering. Cyber protection.
-                Digital reputation. Connected around the responsibilities of
-                institutions, distinguished families and private principals.
+                Core Eye Group is a private strategic intelligence and technology group.
+                We bring together financial intelligence, enterprise infrastructure, cybersecurity
+                and digital authority for institutions, family offices and private principals.
               </p>
               <div className="actions">
                 <button type="button" className="button"
                   onClick={openIntroduction}>
-                  Request a Private Introduction ↗
+                  Request a Private Introduction <Arrow />
                 </button>
-                <a className="quiet-link" href="#expertise">Explore our expertise →</a>
+                <a className="quiet-link" href="#expertise">Explore our expertise <Arrow direction="right" /></a>
               </div>
             </div>
             <CoreVisual onExplore={explore} />
@@ -142,7 +141,7 @@ export default function App() {
                 {divisions.map((item, index) => (
                   <button key={item.id} aria-pressed={division === index}
                     aria-controls="division-detail" onClick={() => setDivision(index)}>
-                    <span>0{index + 1}</span>{item.name}<span>↗</span>
+                    <span>0{index + 1}</span>{item.capability}<span><Arrow /></span>
                   </button>
                 ))}
               </div>
@@ -150,14 +149,14 @@ export default function App() {
               </div>
               <article id="division-detail" className="division-detail" aria-live="polite">
                 <p className="eyebrow">{active.name}</p>
-                <h3>{active.verb}</h3>
+                <h3 ref={expertiseHeading} tabIndex={-1}>{active.capability}</h3>
                 <p>{active.summary}</p>
                 <ul>{active.scope.map(item => <li key={item}>{item}</li>)}</ul>
                 <div className="deliverable">
                   <span className="eyebrow">Potential engagement output</span>
                   <p>{active.output}</p>
                 </div>
-                <a className="quiet-link" href={`/expertise/${active.id}`}>Explore {active.name} ↗</a>
+                <a className="quiet-link" href={`/expertise/${active.id}/`}>Explore {active.name} <Arrow /></a>
                 <p className="scope-note">Scope, responsibilities and any applicable professional
                   permissions are established for each mandate. Outcomes depend on the agreed work and context.</p>
               </article>
@@ -193,17 +192,10 @@ export default function App() {
         <section className="shell section" id="engagement">
           <p className="eyebrow">Private engagement</p>
           <h2>Begin with understanding.</h2>
-          <div className="engagement-grid">
-            {[
-              ['01 / Introduction', 'Understand your context', 'Establish priorities and the nature of the proposed work.'],
-              ['02 / Alignment', 'Define the requirements', 'Consider suitability, specialist needs and scope.'],
-              ['03 / Mandate', 'Agree the relationship', 'Document objectives, responsibilities and delivery arrangements.'],
-            ].map(([label, title, text]) => <article key={label}>
-              <p className="eyebrow">{label}</p><h3>{title}</h3><p>{text}</p>
-            </article>)}
-          </div>
+          <p className="section-copy">Tell us what needs attention. We will review your enquiry before
+            discussing scope, responsibilities, and any next steps.</p>
           <button ref={introductionButton} className="button dark-button"
-            onClick={openIntroduction}>Request a Private Introduction ↗</button>
+            onClick={openIntroduction}>Request a Private Introduction <Arrow /></button>
         </section>
       </main>
       <Footer />

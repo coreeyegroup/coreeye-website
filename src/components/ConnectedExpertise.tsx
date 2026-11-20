@@ -1,3 +1,4 @@
+import Arrow from './Arrow'
 import { useState } from 'react'
 import './ConnectedExpertise.css'
 
@@ -100,7 +101,7 @@ export default function ConnectedExpertise() {
           <div className="connected-output">
             <p className="eyebrow">Proposed engagement output</p>
             <p>{situation.output}</p>
-            <a href="#engagement">Discuss a private mandate ↗</a>
+            <a href="#engagement">Discuss a private mandate <Arrow /></a>
           </div>
         </div>
         <p className="illustration-note">

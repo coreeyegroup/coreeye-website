@@ -1,3 +1,5 @@
+import { divisions } from '../content/company'
+import Arrow from './Arrow'
 import './Footer.css'
 
 export default function Footer() {
@@ -23,27 +25,26 @@ export default function Footer() {
 
           <nav className="footer-nav" aria-label="Footer expertise navigation">
             <h2>Expertise</h2>
-            <a href="/expertise/finance">Core Eye Finance</a>
-            <a href="/expertise/it">Core Eye IT</a>
-            <a href="/expertise/cyber">Core Eye Cyber</a>
-            <a href="/expertise/digital">Core Eye Digital</a>
+            {divisions.map(division => (
+              <a key={division.id} href={`/expertise/${division.id}/`}>{division.capability}</a>
+            ))}
             <a href="/#connected">Illustrative mandates</a>
           </nav>
 
           <nav className="footer-nav" aria-label="Footer engagement navigation">
             <h2>Private Engagement</h2>
             <a href="/#engagement-guide">Before an introduction</a>
-            <a href="/#engagement">The engagement process</a>
+            <a href="/contact/">Contact and enquiries</a>
             <a href="/#working-method">Our working method</a>
             <a href="mailto:contact@coreeyegroup.com">contact@coreeyegroup.com</a>
-            <p>Share a brief requirement to begin a considered introduction.</p>
+            <a href="/privacy/">Enquiry privacy</a>
           </nav>
         </div>
 
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Core Eye Group</span>
           <span>Development preview · Content and company disclosures under review</span>
-          <a href="/#home">Return to the beginning ↑</a>
+          <a href="/#home">Return to the beginning <Arrow direction="up" /></a>
         </div>
       </div>
     </footer>
